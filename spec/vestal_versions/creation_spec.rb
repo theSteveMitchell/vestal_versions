@@ -66,6 +66,26 @@ describe VestalVersions::Creation do
       subject.versions.last.changes.keys.should_not include('first_name')
     end
 
+    #it 'presents an array of versioned fields' do
+    #  User.prepare_versioned_options()
+    #  User.versioned_fields.should include[:first_name, :last_name]
+    #
+    #end
+    #
+    #it 'array of versioned fields includes fields restricted via :only' do
+    #  User.prepare_versioned_options(:except => [:first_name])
+    #  User.versioned_fields.should include [:last_name]
+    #  User.versioned_fields.should_not include[:first_name]
+    #end
+    #
+    #it 'array of versioned fields includes fields excluded via :except' do
+    #  User.prepare_versioned_options(:except => [:first_name])
+    #  User.versioned_fields.should_not include [:last_name]
+    #  User.versioned_fields.should include[:first_name]
+    #end
+
+
+
     it "prefers :only to :except" do
       User.prepare_versioned_options(:only => [:first_name],
         :except => [:first_name])
