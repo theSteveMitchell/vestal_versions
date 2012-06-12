@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
 end
 
 class DeletedUser < ActiveRecord::Base
-  table_name 'users'
+  set_table_name 'users'
   versioned :dependent => :tracking
 end
 
