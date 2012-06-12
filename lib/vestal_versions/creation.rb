@@ -42,6 +42,10 @@ module VestalVersions
       end - %w(created_at created_on updated_at updated_on)
     end
 
+    def versioned_column?(column)
+      versioned_columns.include?(column.to_s)
+    end
+
 		private
 			# Returns whether an initial version should be created upon creation of the parent record.
 			def create_initial_version?

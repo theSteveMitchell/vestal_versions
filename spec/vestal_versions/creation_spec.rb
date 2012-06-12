@@ -84,6 +84,24 @@ describe VestalVersions::Creation do
       subject.versioned_columns.should_not include "first_name"
     end
 
+    it 'will respond to query if field is versioned' do
+      User.prepare_versioned_options({})
+      subject.versioned_column?(:first_name).should be_true
+      subject.versioned_column?("last_name").should be_true
+    end
+
+    it 'array of versioned fields includes fields restricted via :only' do
+      User.prepare_versioned_options(:only => [:first_name])
+      subject.versioned_column?(:first_name).should be_true
+      subject.versioned_column?(:last_name).should be_false
+    end
+
+    it 'array of versioned fields includes fields excluded via :except' do
+      User.prepare_versioned_options(:except => [:first_name])
+      subject.versioned_column?(:first_name).should be_false
+      subject.versioned_column?(:last_name).should be_true
+    end
+
 
 
     it "prefers :only to :except" do
