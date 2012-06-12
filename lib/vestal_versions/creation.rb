@@ -28,6 +28,20 @@ module VestalVersions
 
     # Instance methods that determine whether to save a version and actually perform the save.
 
+    # Returns an array of column names that should be included in the changes of created
+    # versions. If <tt>vestal_versions_options[:only]</tt> is specified, only those columns
+    # will be versioned. Otherwise, if <tt>vestal_versions_options[:except]</tt> is specified,
+    # all columns will be versioned other than those specified. Without either option, the
+    # default is to version all columns. At any rate, the four "automagic" timestamp columns
+    # maintained by Rails are never versioned.
+    def versioned_columns
+      case
+        when vestal_versions_options[:only] then self.class.column_names & vestal_versions_options[:only]
+        when vestal_versions_options[:except] then self.class.column_names - vestal_versions_options[:except]
+        else self.class.column_names
+      end - %w(created_at created_on updated_at updated_on)
+    end
+
 		private
 			# Returns whether an initial version should be created upon creation of the parent record.
 			def create_initial_version?
@@ -67,20 +81,6 @@ module VestalVersions
 				v.update_attribute(:modifications, v.changes.append_changes(version_changes))
 				reset_version_changes
 				reset_version
-			end
-
-			# Returns an array of column names that should be included in the changes of created
-			# versions. If <tt>vestal_versions_options[:only]</tt> is specified, only those columns
-			# will be versioned. Otherwise, if <tt>vestal_versions_options[:except]</tt> is specified,
-			# all columns will be versioned other than those specified. Without either option, the
-			# default is to version all columns. At any rate, the four "automagic" timestamp columns
-			# maintained by Rails are never versioned.
-			def versioned_columns
-				case
-					when vestal_versions_options[:only] then self.class.column_names & vestal_versions_options[:only]
-					when vestal_versions_options[:except] then self.class.column_names - vestal_versions_options[:except]
-					else self.class.column_names
-				end - %w(created_at created_on updated_at updated_on)
 			end
 
 			# Specifies the attributes used during version creation. This is separated into its own
